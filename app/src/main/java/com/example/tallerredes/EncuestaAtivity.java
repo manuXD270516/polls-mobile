@@ -26,12 +26,13 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import java.io.IOException;
 
 public class EncuestaAtivity extends AppCompatActivity {
-public  static  final  int REQUEST_CODE=1;
-public boolean isOn=true;
-Thread cronos;
-int mili=0,seg=0,min=0;
-Handler h=new Handler();
-FusedLocationProviderClient  fusedLocationProviderClient;
+    public static final int REQUEST_CODE = 1;
+    public boolean isOn = true;
+    Thread cronos;
+    int mili = 0, seg = 0, min = 0;
+    Handler h = new Handler();
+    FusedLocationProviderClient fusedLocationProviderClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,26 +41,26 @@ FusedLocationProviderClient  fusedLocationProviderClient;
         Switch simpleSwitch = (Switch) findViewById(R.id.simpleSwitch); // initiate Switch
 
 
-      Button btnIngresar = findViewById(R.id.btn_nuevaEncuesta);
-simpleSwitch.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        if(simpleSwitch.isChecked()){
-            isOn=true;
-            hilocronometro();
-            iniciarLocalizacion();
+        Button btnIngresar = findViewById(R.id.btn_nuevaEncuesta);
+        simpleSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simpleSwitch.isChecked()) {
+                    isOn = true;
+                    hilocronometro();
+                    iniciarLocalizacion();
 
 
-        }else {
+                } else {
 
-        }
-    }
-});
+                }
+            }
+        });
 
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent (EncuestaAtivity.this, Formulario.class);
+                Intent intent = new Intent(EncuestaAtivity.this, Formulario.class);
                 startActivity(intent);
             }
         });
@@ -74,12 +75,12 @@ simpleSwitch.setOnClickListener(new View.OnClickListener() {
 
         final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if(!gpsEnabled) {
+        if (!gpsEnabled) {
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(settingsIntent);
         }
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -93,56 +94,57 @@ simpleSwitch.setOnClickListener(new View.OnClickListener() {
 
         Log.d("debug", "Localizacion agregada");
     }
-    private void hilocronometro(){
-        cronos= new Thread(new Runnable() {
+
+    private void hilocronometro() {
+        cronos = new Thread(new Runnable() {
             @Override
             public void run() {
-                 while(true){
-                     if(isOn){
-                      try {
-                         Thread.sleep(1);
-                         } catch (InterruptedException e) {
-                          e.printStackTrace();
-                      }
-                      mili++;
-                      if(mili==999){
-                        seg++;
-                        mili=0;
-                          System.out.println(min+":"+seg+":"+mili);
-                          VariablesGlobales.tiempoConexion= min+":"+seg+":"+mili;
-                      }
+                while (true) {
+                    if (isOn) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mili++;
+                        if (mili == 999) {
+                            seg++;
+                            mili = 0;
+                            System.out.println(min + ":" + seg + ":" + mili);
+                            VariablesGlobales.tiempoConexion = min + ":" + seg + ":" + mili;
+                        }
 
-                      if(seg==59){
-                          min++;
-                          seg=0;
-                      }
-                      h.post(new Runnable() {
-                          @Override
-                          public void run() {
-                              String m="",s="",mi="";
-                              if(mili<10){
-                               m="00"+mili;
-                              }else if (mili<100){
-                                m="0"+mili;
-                              }else {
-                                  m=""+mili;
-                              }
-                              if(seg<10){
-                                  s="0"+seg;
-                              }else{
-                                  s=""+seg;
-                              }
-                              if(min<10){
-                                 mi="0"+min;
-                              }else{
-                                  mi=""+min;
-                              }
+                        if (seg == 59) {
+                            min++;
+                            seg = 0;
+                        }
+                        h.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                String m = "", s = "", mi = "";
+                                if (mili < 10) {
+                                    m = "00" + mili;
+                                } else if (mili < 100) {
+                                    m = "0" + mili;
+                                } else {
+                                    m = "" + mili;
+                                }
+                                if (seg < 10) {
+                                    s = "0" + seg;
+                                } else {
+                                    s = "" + seg;
+                                }
+                                if (min < 10) {
+                                    mi = "0" + min;
+                                } else {
+                                    mi = "" + min;
+                                }
 
-                          }
+                            }
 
-                      });
+                        });
 
-                     }
+                    }
 
                 }
             }

@@ -2,7 +2,7 @@ package com.example.tallerredes;
 
 import android.os.AsyncTask;
 
-public class TareaAsincrona extends AsyncTask <Object, Void, Boolean> {
+public class TareaAsincrona extends AsyncTask<Object, Void, Boolean> {
     private Comunicacion comunicacion;
 
 
@@ -19,12 +19,12 @@ public class TareaAsincrona extends AsyncTask <Object, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Object... objects) {
         try {
-            Thread.sleep((int)objects[2]);
+            Thread.sleep((int) objects[2]);
             String user = (String) objects[0];
             String pass = (String) objects[1];
-            if (user.equals("admin") && pass.equals("admin")){
+            if (user.equals("admin") && pass.equals("admin")) {
                 return true;
-            }else{
+            } else {
                 return true;
             }
         } catch (InterruptedException e) {
@@ -35,11 +35,11 @@ public class TareaAsincrona extends AsyncTask <Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean bo) {
-        if (bo){
+        if (bo) {
             this.comunicacion.lanzarActividad(HuellaActivity.class);
             this.comunicacion.showMessage("Datos Correctos");
             this.comunicacion.toggleProgressBar(false);
-        }else{
+        } else {
             this.comunicacion.showMessage("Datos Incorrectos");
 
         }

@@ -30,27 +30,27 @@ public class HuellaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_huella);
 
-    TextView msg_txt = findViewById(R.id.txt_msg);
-    Button login_btn = findViewById(R.id.btn_login);
-    BiometricManager biometricManager = BiometricManager.from(this);
-switch (biometricManager.canAuthenticate()){
-    case BiometricManager.BIOMETRIC_SUCCESS:
-         msg_txt.setText("Puede usar su lector de huella para loguearse.");
-         msg_txt.setTextColor(Color.parseColor("#fafafa"));
-         break;
-    case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-        msg_txt.setText("El dispositivo no tiene sensor de huella dactilar.");
-        login_btn.setVisibility(View.GONE);
-        break;
-    case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-        msg_txt.setText("El sensor no esta disponible.");
-        login_btn.setVisibility(View.GONE);
-        break;
-    case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-        msg_txt.setText("su dispositivo no tiene guardado su huella, por favor verifique si configuracion.");
-        login_btn.setVisibility(View.GONE);
-        break;
-}
+        TextView msg_txt = findViewById(R.id.txt_msg);
+        Button login_btn = findViewById(R.id.btn_login);
+        BiometricManager biometricManager = BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate()) {
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                msg_txt.setText("Puede usar su lector de huella para loguearse.");
+                msg_txt.setTextColor(Color.parseColor("#fafafa"));
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                msg_txt.setText("El dispositivo no tiene sensor de huella dactilar.");
+                login_btn.setVisibility(View.GONE);
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                msg_txt.setText("El sensor no esta disponible.");
+                login_btn.setVisibility(View.GONE);
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                msg_txt.setText("su dispositivo no tiene guardado su huella, por favor verifique si configuracion.");
+                login_btn.setVisibility(View.GONE);
+                break;
+        }
         Executor executor = ContextCompat.getMainExecutor(this);
         final BiometricPrompt biometricPrompt = new BiometricPrompt(HuellaActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
@@ -61,8 +61,8 @@ switch (biometricManager.canAuthenticate()){
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-               Toast.makeText(getApplicationContext(),"Login Success!",Toast.LENGTH_SHORT).show();
-                Intent intent= new Intent (HuellaActivity.this, EncuestaAtivity.class);
+                Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(HuellaActivity.this, EncuestaAtivity.class);
                 startActivity(intent);
             }
 
@@ -71,18 +71,18 @@ switch (biometricManager.canAuthenticate()){
                 super.onAuthenticationFailed();
             }
         });
-final BiometricPrompt.PromptInfo promptInfo = new  BiometricPrompt.PromptInfo.Builder()
-        .setTitle("Login")
-        .setDescription("Use su lector de huella")
-        .setNegativeButtonText("cancel")
-        .build();
-login_btn.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        biometricPrompt.authenticate(promptInfo);
-      //  iniciarLocalizacion();
-    }
-});
+        final BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Login")
+                .setDescription("Use su lector de huella")
+                .setNegativeButtonText("cancel")
+                .build();
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                biometricPrompt.authenticate(promptInfo);
+                //  iniciarLocalizacion();
+            }
+        });
     }
 
 }

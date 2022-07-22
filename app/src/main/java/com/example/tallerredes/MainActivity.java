@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
 public class MainActivity extends AppCompatActivity implements Comunicacion {
     private ProgressBar pgbEjecutanto;
     private Button btnIngresar;

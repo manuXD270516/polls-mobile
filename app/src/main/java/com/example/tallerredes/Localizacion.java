@@ -17,8 +17,8 @@ public class Localizacion implements LocationListener {
         String texto = "Mi ubicación es: \n" +
                 "Latitud = " + location.getLatitude() + "\n" +
                 "Longitud = " + location.getLongitude();
-        VariablesGlobales.latitud= Integer.toString((int) location.getLatitude());
-        VariablesGlobales.longitud= Integer.toString((int) location.getLongitude());
+        VariablesGlobales.latitud = Integer.toString((int) location.getLatitude());
+        VariablesGlobales.longitud = Integer.toString((int) location.getLongitude());
 
         System.out.println(texto);
 
