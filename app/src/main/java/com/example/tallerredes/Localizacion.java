@@ -1,5 +1,9 @@
 package com.example.tallerredes;
 
+import static com.example.tallerredes.VariablesGlobales.BASE_URL;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationProvider;
@@ -8,19 +12,66 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tallerredes.apis.EndpointsPolls;
+import com.example.tallerredes.dtos.ResponsePostPollDto;
+import com.example.tallerredes.dtos.ResponsePutLocationDto;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Localizacion implements LocationListener {
 
+
+    private SharedPreferences preferences;
+
+    private EndpointsPolls endpointsPolls;
+    private Retrofit retrofit;
+    private Call<ResponsePutLocationDto> putLocationApi;
+
+    private int pollsterId;
+
+    public Localizacion(SharedPreferences sharedPreferences) {
+        this.preferences = sharedPreferences;
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        endpointsPolls = retrofit.create(EndpointsPolls.class);
+
+        pollsterId = preferences.getInt("pollsterId", 0);
+
+    }
 
     @Override
     public void onLocationChanged(Location location) {
         // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
+
+
         String texto = "Mi ubicación es: \n" +
                 "Latitud = " + location.getLatitude() + "\n" +
                 "Longitud = " + location.getLongitude();
-        VariablesGlobales.latitud = Integer.toString((int) location.getLatitude());
-        VariablesGlobales.longitud = Integer.toString((int) location.getLongitude());
-
+        VariablesGlobales.latitud = String.valueOf(location.getLatitude());
+        VariablesGlobales.longitud = String.valueOf(location.getLongitude());
         System.out.println(texto);
+
+
+        putLocationApi = endpointsPolls.putLocation(pollsterId, Float.parseFloat(VariablesGlobales.latitud), Float.parseFloat(VariablesGlobales.longitud));
+        putLocationApi.enqueue(new Callback<ResponsePutLocationDto>() {
+            @Override
+            public void onResponse(Call<ResponsePutLocationDto> call, Response<ResponsePutLocationDto> response) {
+                if (response.isSuccessful()) {
+                    Log.i("ENDPOINT LOCATION: ", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponsePutLocationDto> call, Throwable t) {
+                Log.i("ENDPOINT LOCATION ERROR: ", t.getLocalizedMessage());
+            }
+        });
 
     }
 

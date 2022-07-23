@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
@@ -33,6 +34,8 @@ public class EncuestaAtivity extends AppCompatActivity {
     Handler h = new Handler();
     FusedLocationProviderClient fusedLocationProviderClient;
 
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class EncuestaAtivity extends AppCompatActivity {
 
         Switch simpleSwitch = (Switch) findViewById(R.id.simpleSwitch); // initiate Switch
 
+        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
 
         Button btnIngresar = findViewById(R.id.btn_nuevaEncuesta);
         simpleSwitch.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +74,7 @@ public class EncuestaAtivity extends AppCompatActivity {
     private void iniciarLocalizacion() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Localizacion localizacion = new Localizacion();
+        Localizacion localizacion = new Localizacion(preferences);
 
 
         final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
